@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ems-deployment
+  labels:
+    app: employee-management
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: employee-management
+  template:
+    metadata:
+      labels:
+        app: employee-management
+    spec:
+      containers:
+      - name: ems-container
+        image: employee-management:latest
+        ports:
+        - containerPort: 9090
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
