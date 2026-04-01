@@ -17,6 +17,7 @@ spec:
       containers:
       - name: ems-container
         image: employee-management:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 9090
         resources:

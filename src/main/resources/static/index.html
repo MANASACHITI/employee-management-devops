@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps-Driven Employee Management System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; }
+
+        .header {
+            background: #1a237e;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 22px; }
+        .header p { font-size: 13px; opacity: 0.8; }
+
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #1a237e;
+        }
+        .stat-card h2 { font-size: 32px; color: #1a237e; }
+        .stat-card p { color: #666; font-size: 14px; margin-top: 5px; }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #1a237e;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e8eaf6;
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a237e;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .btn-primary { background: #1a237e; color: white; }
+        .btn-primary:hover { background: #283593; }
+        .btn-danger { background: #c62828; color: white; font-size: 12px; padding: 6px 14px; }
+        .btn-danger:hover { background: #b71c1c; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #e8eaf6;
+            color: #1a237e;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 13px;
+        }
+        td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        tr:hover { background: #f9f9f9; }
+
+        .badge {
+            background: #e8eaf6;
+            color: #1a237e;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+
+        #message { margin-bottom: 15px; font-size: 14px; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1>DevOps-Driven Employee Management System</h1>
+        <p>B.N.M. Institute of Technology — Department of CSE</p>
+    </div>
+    <div style="text-align:right; font-size:13px;">
+        <div>Spring Boot + Docker + Kubernetes</div>
+        <div style="opacity:0.7;">DevOps Mini Project 2025-26</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-card">
+            <h2 id="totalCount">0</h2>
+            <p>Total Employees</p>
+        </div>
+        <div class="stat-card">
+            <h2 id="deptCount">0</h2>
+            <p>Departments</p>
+        </div>
+        <div class="stat-card">
+            <h2 id="avgSalary">0</h2>
+            <p>Average Salary</p>
+        </div>
+    </div>
+
+    <!-- Add Employee Form -->
+    <div class="card">
+        <h2>Add New Employee</h2>
+        <div id="message"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="firstName" placeholder="Enter first name"/>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter last name"/>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Enter email"/>
+            </div>
+            <div class="form-group">
+                <label>Department</label>
+                <input type="text" id="department" placeholder="Enter department"/>
+            </div>
+            <div class="form-group">
+                <label>Salary</label>
+                <input type="number" id="salary" placeholder="Enter salary"/>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="addEmployee()">Add Employee</button>
+    </div>
+
+    <!-- Employee Table -->
+    <div class="card">
+        <h2>All Employees</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTable">
+                <tr><td colspan="7" style="text-align:center; color:#999;">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    const API = 'http://localhost:9090/api/employees';
+
+    function showMessage(msg, type) {
+        const el = document.getElementById('message');
+        el.textContent = msg;
+        el.className = type;
+        setTimeout(() => el.textContent = '', 3000);
+    }
+
+    function loadEmployees() {
+        fetch(API)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('employeeTable');
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;">No employees found. Add one above!</td></tr>';
+                } else {
+                    tbody.innerHTML = data.map(e => `
+                        <tr>
+                            <td>${e.id}</td>
+                            <td>${e.firstName}</td>
+                            <td>${e.lastName}</td>
+                            <td>${e.email}</td>
+                            <td><span class="badge">${e.department}</span></td>
+                            <td>₹${e.salary.toLocaleString()}</td>
+                            <td><button class="btn btn-danger" onclick="deleteEmployee(${e.id})">Delete</button></td>
+                        </tr>
+                    `).join('');
+                }
+                document.getElementById('totalCount').textContent = data.length;
+                const depts = [...new Set(data.map(e => e.department))];
+                document.getElementById('deptCount').textContent = depts.length;
+                const avg = data.length > 0 ? Math.round(data.reduce((s, e) => s + e.salary, 0) / data.length) : 0;
+                document.getElementById('avgSalary').textContent = '₹' + avg.toLocaleString();
+            })
+            .catch(() => {
+                document.getElementById('employeeTable').innerHTML = '<tr><td colspan="7" style="text-align:center;color:red;">Cannot connect to server. Make sure Spring Boot is running!</td></tr>';
+            });
+    }
+
+    function addEmployee() {
+        const employee = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            department: document.getElementById('department').value,
+            salary: parseFloat(document.getElementById('salary').value)
+        };
+
+        if (!employee.firstName || !employee.lastName || !employee.email || !employee.department || !employee.salary) {
+            showMessage('Please fill all fields!', 'error');
+            return;
+        }
+
+        fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(employee)
+        })
+        .then(res => res.json())
+        .then(() => {
+            showMessage('Employee added successfully!', 'success');
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('department').value = '';
+            document.getElementById('salary').value = '';
+            loadEmployees();
+        })
+        .catch(() => showMessage('Error adding employee!', 'error'));
+    }
+
+    function deleteEmployee(id) {
+        if (confirm('Are you sure you want to delete this employee?')) {
+            fetch(API + '/' + id, { method: 'DELETE' })
+            .then(() => {
+                showMessage('Employee deleted successfully!', 'success');
+                loadEmployees();
+            })
+            .catch(() => showMessage('Error deleting employee!', 'error'));
+        }
+    }
+
+    loadEmployees();
+    setInterval(loadEmployees, 5000);
+</script>
+
+</body>
+</html>
